@@ -9,16 +9,15 @@ import connectDB from "./database.js";
 import logger from "./middlewares/logger.js";
 import productRoutes from "./routes/products.js";
 
-const app = express();
-
 dotenv.config();
 
-connectDB();
+const app = express();
 
-const appUrls = process.env.APP_URLS;
-
-const appUrlList = appUrls.split(",");
-// console.log(appUrls);
+const appUrls = process.env.APP_URLS || "";
+const appUrlList = appUrls
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,19 +31,28 @@ app.use(
   }),
 );
 
+// Connect to MongoDB
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    res.status(500).json({
+      message: "Database connection failed",
+    });
+  }
+});
+
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
-
-const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
   res.json({
     appName: "Node app",
     version: "1.1.0",
-    port: PORT,
+    message: "Backend is running",
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at port ${PORT}`);
-});
+export default app;

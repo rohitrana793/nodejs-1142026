@@ -4,13 +4,14 @@
   "description": "Learning node js",
   "main": "index.js",
   "type": "module",
+  "engines": {
+  "node":"22.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "author": "Samarajya Shrestha",
-  "license": "MIT",
   "devDependencies": {
     "nodemon": "^3.1.0"
   },
