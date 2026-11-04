@@ -33,7 +33,7 @@ const getAllProducts = async (data) => {
 
   const searchQuery = Object.entries(filters).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: new RegExp(value, "i") }),
-    {}
+    {},
   );
 
   try {
@@ -45,7 +45,7 @@ const getAllProducts = async (data) => {
     return products.map((product) => {
       const formattedCreatedDate = customDateFormatter(
         product.createdAt,
-        "MMM dd, yyyy"
+        "MMM dd, yyyy",
       );
 
       return {
@@ -70,13 +70,13 @@ const getOneProduct = async (id) => {
   }
 };
 
-const getTotal = async ()=>{
+const getTotal = async () => {
   try {
-    return await Product.countDocuments()
+    return await Product.countDocuments();
   } catch (error) {
     throw error;
   }
-}
+};
 
 const createProduct = async (data, userId) => {
   try {
