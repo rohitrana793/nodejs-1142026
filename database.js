@@ -15,13 +15,14 @@ const connectDB = async () => {
   }
 
   if (!process.env.MONGODB_URI) {
-    throw new Error("MONGODB_URI is not configured");
+    throw new Error("MONGODB_URI is missing");
   }
 
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(process.env.MONGODB_URI, {
         dbName: "product",
+        serverSelectionTimeoutMS: 10000,
       })
       .then((mongoose) => mongoose)
       .catch((error) => {
@@ -30,11 +31,13 @@ const connectDB = async () => {
       });
   }
 
-  cached.conn = await cached.promise;
-
-  console.log("MongoDB connected...");
-
-  return cached.conn;
+  try {
+    cached.conn = await cached.promise;
+    console.log("MongoDB connected successfully");
+    return cached.conn;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export default connectDB;
